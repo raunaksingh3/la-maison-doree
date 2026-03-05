@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La Maison Dorée — Artisan Bakery</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@200;300;400;500&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/customer.css">
+</head>
+<body>
+
+<!-- Preloader -->
+<div id="preloader">
+  <div class="preloader-inner">
+    <div class="preloader-logo">La Maison Dorée</div>
+    <div class="preloader-line"></div>
+    <div class="preloader-text">EST. 2018 · ARTISAN BAKERY</div>
+  </div>
+</div>
+
+<!-- Cursor -->
+<div class="custom-cursor" id="cursor"></div>
+<div class="custom-cursor-follower" id="cursor-follower"></div>
+
+<!-- Navigation -->
+<nav class="nav" id="nav">
+  <div class="nav-left">
+    <span class="nav-tagline">Mumbai's Finest</span>
+  </div>
+  <div class="nav-center">
+    <a href="index.html" class="nav-logo">La Maison Dorée</a>
+  </div>
+  <div class="nav-right">
+    <button class="nav-btn" onclick="openAuthModal()">
+      <span id="nav-user-name">Login</span>
+    </button>
+    <button class="cart-btn" onclick="openCart()">
+      <span class="cart-icon">🛒</span>
+      <span class="cart-count" id="cart-count">0</span>
+    </button>
+    <button class="nav-btn admin-link" onclick="window.location.href='admin.html'">Admin</button>
+  </div>
+</nav>
+
+<!-- Hero Section -->
+<section class="hero">
+  <div class="hero-bg">
+    <div class="hero-gradient"></div>
+    <div class="hero-particles" id="particles"></div>
+  </div>
+  <div class="hero-content">
+    <p class="hero-eyebrow reveal-up">Handcrafted with Passion</p>
+    <h1 class="hero-title reveal-up">
+      <span class="hero-title-line">Artisan</span>
+      <span class="hero-title-line italic">Boulangerie</span>
+    </h1>
+    <p class="hero-subtitle reveal-up">Where every creation is a masterpiece of flavor, tradition, and contemporary artistry</p>
+    <div class="hero-actions reveal-up">
+      <button class="btn-primary" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">
+        <span>Explore Collection</span>
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 10h12M10 4l6 6-6 6" stroke="currentColor" stroke-width="1.5"/></svg>
+      </button>
+      <button class="btn-ghost" onclick="document.getElementById('about').scrollIntoView({behavior:'smooth'})">Our Story</button>
+    </div>
+  </div>
+  <div class="hero-scroll-indicator">
+    <div class="scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<!-- Marquee -->
+<div class="marquee-section">
+  <div class="marquee-track">
+    <span>Croissants</span><span class="dot">·</span>
+    <span>Sourdough</span><span class="dot">·</span>
+    <span>Macarons</span><span class="dot">·</span>
+    <span>Brioche</span><span class="dot">·</span>
+    <span>Éclair</span><span class="dot">·</span>
+    <span>Tarts</span><span class="dot">·</span>
+    <span>Choux</span><span class="dot">·</span>
+    <span>Mille-feuille</span><span class="dot">·</span>
+    <span>Croissants</span><span class="dot">·</span>
+    <span>Sourdough</span><span class="dot">·</span>
+    <span>Macarons</span><span class="dot">·</span>
+    <span>Brioche</span><span class="dot">·</span>
+    <span>Éclair</span><span class="dot">·</span>
+    <span>Tarts</span><span class="dot">·</span>
+    <span>Choux</span><span class="dot">·</span>
+    <span>Mille-feuille</span><span class="dot">·</span>
+  </div>
+</div>
+
+<!-- Categories Filter -->
+<section class="categories-section" id="products">
+  <div class="section-header">
+    <p class="section-eyebrow">Our Collection</p>
+    <h2 class="section-title">Crafted with Excellence</h2>
+  </div>
+  <div class="categories-filter" id="categories-filter">
+    <button class="cat-btn active" data-cat="all">All Items</button>
+    <button class="cat-btn" data-cat="croissants">Croissants</button>
+    <button class="cat-btn" data-cat="breads">Breads</button>
+    <button class="cat-btn" data-cat="cakes">Cakes</button>
+    <button class="cat-btn" data-cat="pastries">Pastries</button>
+    <button class="cat-btn" data-cat="cookies">Cookies</button>
+    <button class="cat-btn" data-cat="macarons">Macarons</button>
+    <button class="cat-btn" data-cat="tarts">Tarts</button>
+    <button class="cat-btn" data-cat="muffins">Muffins</button>
+    <button class="cat-btn" data-cat="beverages">Beverages</button>
+    <button class="cat-btn" data-cat="savory">Savory</button>
+    <button class="cat-btn" data-cat="seasonal">Seasonal</button>
+  </div>
+
+  <!-- Search -->
+  <div class="search-bar-wrap">
+    <input type="text" id="product-search" placeholder="Search artisan creations..." class="search-bar" oninput="filterProducts()">
+  </div>
+
+  <!-- Products Grid -->
+  <div class="products-grid" id="products-grid"></div>
+  
+  <div class="load-more-wrap">
+    <button class="btn-outline" id="load-more-btn" onclick="loadMore()">Load More</button>
+  </div>
+</section>
+
+<!-- About Section -->
+<section class="about-section" id="about">
+  <div class="about-grid">
+    <div class="about-visual">
+      <div class="about-img-stack">
+        <div class="about-img-main">🥐</div>
+        <div class="about-img-accent">✨</div>
+      </div>
+    </div>
+    <div class="about-content">
+      <p class="section-eyebrow">Our Story</p>
+      <h2 class="section-title">A Legacy of<br><em>Artisanal Craft</em></h2>
+      <p class="about-text">Since 2018, La Maison Dorée has been crafting exceptional baked goods using time-honored French techniques combined with the finest local ingredients. Every item that leaves our kitchen is a testament to our unwavering commitment to quality.</p>
+      <p class="about-text">Our master bakers train for years to perfect the art of laminated dough, fermentation, and precision pastry-making. The result? An unparalleled experience that transports you to the streets of Paris.</p>
+      <div class="about-stats">
+        <div class="stat"><span class="stat-num">250+</span><span class="stat-label">Menu Items</span></div>
+        <div class="stat"><span class="stat-num">15K+</span><span class="stat-label">Happy Customers</span></div>
+        <div class="stat"><span class="stat-num">6</span><span class="stat-label">Years of Excellence</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Cart Sidebar -->
+<div class="cart-overlay" id="cart-overlay" onclick="closeCart()"></div>
+<div class="cart-sidebar" id="cart-sidebar">
+  <div class="cart-header">
+    <h3>Your Selection</h3>
+    <button onclick="closeCart()" class="cart-close">×</button>
+  </div>
+  <div class="cart-items" id="cart-items"></div>
+  <div class="cart-footer">
+    <div class="cart-total-row">
+      <span>Subtotal</span>
+      <span id="cart-subtotal">₹0</span>
+    </div>
+    <div class="cart-total-row">
+      <span>GST (5%)</span>
+      <span id="cart-tax">₹0</span>
+    </div>
+    <div class="cart-total-row cart-total-final">
+      <span>Total</span>
+      <span id="cart-total">₹0</span>
+    </div>
+    <button class="btn-primary full-width" onclick="proceedToCheckout()">Proceed to Checkout</button>
+  </div>
+</div>
+
+<!-- Auth Modal -->
+<div class="modal-overlay" id="auth-modal-overlay">
+  <div class="modal auth-modal">
+    <button class="modal-close" onclick="closeAuthModal()">×</button>
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="login-tab" onclick="switchTab('login')">Sign In</button>
+      <button class="auth-tab" id="signup-tab" onclick="switchTab('signup')">Register</button>
+    </div>
+    
+    <!-- Login Form -->
+    <div id="login-form" class="auth-form">
+      <h2>Welcome Back</h2>
+      <p class="auth-subtitle">Sign in to your account</p>
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" id="login-email" placeholder="your@email.com" class="form-input">
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <div class="input-pw-wrap">
+          <input type="password" id="login-password" placeholder="Enter password" class="form-input">
+          <button class="pw-toggle" onclick="togglePw('login-password')">👁</button>
+        </div>
+      </div>
+      <div id="login-error" class="form-error"></div>
+      <button class="btn-primary full-width" onclick="loginUser()">Sign In</button>
+      <p class="auth-switch">New here? <a href="#" onclick="switchTab('signup')">Create Account</a></p>
+    </div>
+    
+    <!-- Signup Form -->
+    <div id="signup-form" class="auth-form hidden">
+      <h2>Create Account</h2>
+      <p class="auth-subtitle">Join La Maison Dorée</p>
+      <div class="form-row">
+        <div class="form-group">
+          <label>First Name *</label>
+          <input type="text" id="su-fname" placeholder="First name" class="form-input">
+        </div>
+        <div class="form-group">
+          <label>Last Name *</label>
+          <input type="text" id="su-lname" placeholder="Last name" class="form-input">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Email Address *</label>
+        <input type="email" id="su-email" placeholder="your@email.com" class="form-input">
+      </div>
+      <div class="form-group">
+        <label>Phone Number *</label>
+        <div class="phone-wrap">
+          <span class="phone-prefix">+91</span>
+          <input type="tel" id="su-phone" placeholder="10-digit mobile number" class="form-input" maxlength="10">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Password *</label>
+        <div class="input-pw-wrap">
+          <input type="password" id="su-password" placeholder="Min 8 characters" class="form-input" oninput="checkPasswordStrength(this.value)">
+          <button class="pw-toggle" onclick="togglePw('su-password')">👁</button>
+        </div>
+        <div class="pw-strength-bar"><div id="pw-strength-fill"></div></div>
+        <p class="pw-strength-text" id="pw-strength-text"></p>
+      </div>
+      <div class="form-group">
+        <label>Confirm Password *</label>
+        <input type="password" id="su-confirm-password" placeholder="Re-enter password" class="form-input">
+      </div>
+      <div class="address-section">
+        <h4 class="address-title">Delivery Address</h4>
+        <div class="form-group">
+          <label>Address Line 1 *</label>
+          <input type="text" id="su-addr1" placeholder="House/Flat no., Building name" class="form-input">
+        </div>
+        <div class="form-group">
+          <label>Address Line 2</label>
+          <input type="text" id="su-addr2" placeholder="Street, Locality" class="form-input">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>PIN Code *</label>
+            <input type="text" id="su-pin" placeholder="6-digit PIN" class="form-input" maxlength="6" oninput="fetchPincode(this.value)">
+          </div>
+          <div class="form-group">
+            <label>City</label>
+            <input type="text" id="su-city" placeholder="City" class="form-input" readonly>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>State</label>
+            <input type="text" id="su-state" placeholder="State" class="form-input" readonly>
+          </div>
+          <div class="form-group">
+            <label>Country</label>
+            <input type="text" id="su-country" value="India" class="form-input" readonly>
+          </div>
+        </div>
+      </div>
+      <div id="signup-error" class="form-error"></div>
+      <button class="btn-primary full-width" onclick="registerUser()">Create Account</button>
+      <p class="auth-switch">Already have an account? <a href="#" onclick="switchTab('login')">Sign In</a></p>
+    </div>
+  </div>
+</div>
+
+<!-- Checkout Modal -->
+<div class="modal-overlay" id="checkout-modal-overlay">
+  <div class="modal checkout-modal">
+    <button class="modal-close" onclick="closeCheckout()">×</button>
+    <h2>Order Summary</h2>
+    <div id="checkout-items-list"></div>
+    <div class="checkout-address-section">
+      <h3>Delivery Address</h3>
+      <div id="checkout-address-display"></div>
+    </div>
+    <div class="checkout-totals">
+      <div class="checkout-row"><span>Subtotal</span><span id="co-subtotal"></span></div>
+      <div class="checkout-row"><span>GST (5%)</span><span id="co-tax"></span></div>
+      <div class="checkout-row"><span>Delivery</span><span>₹40</span></div>
+      <div class="checkout-row total-row"><span>Total</span><span id="co-total"></span></div>
+    </div>
+    <button class="btn-primary full-width" onclick="goToPayment()">Proceed to Payment</button>
+  </div>
+</div>
+
+<!-- Payment Modal -->
+<div class="modal-overlay" id="payment-modal-overlay">
+  <div class="modal payment-modal">
+    <button class="modal-close" onclick="closePayment()">×</button>
+    <h2>Secure Payment</h2>
+    <div class="payment-amount-display">
+      <span class="pay-label">Amount to Pay</span>
+      <span class="pay-amount" id="pay-amount-display">₹0</span>
+    </div>
+    <div class="payment-methods">
+      <button class="pay-method-btn active" data-method="upi">UPI</button>
+      <button class="pay-method-btn" data-method="card">Credit/Debit Card</button>
+      <button class="pay-method-btn" data-method="cod">Cash on Delivery</button>
+    </div>
+    <div class="pay-upi pay-section active" id="pay-upi">
+      <div class="form-group">
+        <label>UPI ID</label>
+        <input type="text" id="upi-id" placeholder="yourname@paytm / @gpay" class="form-input">
+      </div>
+      <div class="qr-mock">
+        <div class="qr-inner">📱</div>
+        <p>Scan to pay via any UPI app</p>
+      </div>
+    </div>
+    <div class="pay-card pay-section" id="pay-card">
+      <div class="form-group">
+        <label>Card Number</label>
+        <input type="text" id="card-num" placeholder="1234 5678 9012 3456" class="form-input" maxlength="19" oninput="formatCard(this)">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Expiry</label>
+          <input type="text" id="card-exp" placeholder="MM/YY" class="form-input" maxlength="5">
+        </div>
+        <div class="form-group">
+          <label>CVV</label>
+          <input type="password" id="card-cvv" placeholder="•••" class="form-input" maxlength="3">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Name on Card</label>
+        <input type="text" id="card-name" placeholder="Full name" class="form-input">
+      </div>
+    </div>
+    <div class="pay-cod pay-section" id="pay-cod">
+      <div class="cod-info">
+        <span class="cod-icon">💵</span>
+        <p>Pay in cash when your order arrives. Please keep exact change ready.</p>
+      </div>
+    </div>
+    <div class="payment-confirm-check">
+      <label class="checkbox-label">
+        <input type="checkbox" id="payment-confirm-checkbox">
+        <span class="checkmark"></span>
+        I confirm the order details and authorize this payment of <strong id="confirm-amount"></strong>
+      </label>
+    </div>
+    <button class="btn-primary full-width" onclick="confirmPayment()">Confirm & Place Order</button>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="footer-top">
+    <div class="footer-brand">
+      <div class="footer-logo">La Maison Dorée</div>
+      <p>Artisan bakery crafting exceptional pastries and breads since 2018.</p>
+    </div>
+    <div class="footer-links">
+      <h4>Quick Links</h4>
+      <a href="#">Home</a>
+      <a href="#">Our Story</a>
+      <a href="#">Menu</a>
+      <a href="#">Contact</a>
+    </div>
+    <div class="footer-contact">
+      <h4>Contact Us</h4>
+      <p>📍 Bandra West, Mumbai</p>
+      <p>📞 +91 98765 43210</p>
+      <p>✉️ hello@lamaisondoree.in</p>
+      <p>🕐 7AM – 9PM Daily</p>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 La Maison Dorée. All rights reserved.</p>
+  </div>
+</footer>
+
+<!-- Toast Notification -->
+<div class="toast" id="toast"></div>
+
+<script src="js/products-data.js"></script>
+<script src="js/customer.js"></script>
+</body>
+</html>

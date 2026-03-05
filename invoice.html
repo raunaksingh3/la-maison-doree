@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Order Invoice — La Maison Dorée</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gold: #C9A84C; --gold-light: #E8C97A; --gold-dark: #9A7A2E;
+  --cream: #FAF6EE; --noir: #0D0A06; --noir-soft: #1A1511;
+  --warm-gray: #8B7D6B;
+  --font-display: 'Cormorant Garamond', serif;
+  --font-body: 'Montserrat', sans-serif;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--noir); color: var(--cream); font-family: var(--font-body); min-height: 100vh; }
+
+/* Success Banner */
+.success-banner {
+  background: linear-gradient(135deg, rgba(201,168,76,0.15), rgba(201,168,76,0.05));
+  border-bottom: 1px solid rgba(201,168,76,0.3);
+  padding: 3rem 2rem; text-align: center;
+  animation: fadeIn 0.8s ease;
+}
+@keyframes fadeIn { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+.success-icon { font-size: 4rem; margin-bottom: 1rem; display: block; animation: bounce 1s 0.5s ease; }
+@keyframes bounce { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.2); } }
+.success-title { font-family: var(--font-display); font-size: 2.5rem; color: var(--gold); margin-bottom: 0.5rem; }
+.success-subtitle { font-size: 0.85rem; color: var(--warm-gray); letter-spacing: 0.05em; }
+
+/* Page */
+.page-wrap { max-width: 800px; margin: 0 auto; padding: 2rem; }
+
+/* Delivery Timer */
+.delivery-card {
+  background: rgba(201,168,76,0.08); border: 1px solid rgba(201,168,76,0.3);
+  padding: 2rem; margin: 2rem 0; text-align: center;
+  animation: slideIn 0.6s 0.3s ease backwards;
+}
+@keyframes slideIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+.delivery-label { font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--warm-gray); margin-bottom: 0.5rem; }
+.delivery-time { font-family: var(--font-display); font-size: 2rem; color: var(--gold); margin-bottom: 0.5rem; }
+.delivery-note { font-size: 0.75rem; color: var(--warm-gray); }
+
+/* Invoice */
+.invoice-box {
+  background: var(--noir-soft); border: 1px solid rgba(201,168,76,0.2);
+  animation: slideIn 0.6s 0.5s ease backwards;
+}
+.invoice-header {
+  padding: 2rem 2.5rem;
+  border-bottom: 1px solid rgba(201,168,76,0.15);
+  display: flex; justify-content: space-between; align-items: flex-start;
+}
+.invoice-brand .brand-name { font-family: var(--font-display); font-size: 1.8rem; color: var(--gold); }
+.invoice-brand .brand-sub { font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--warm-gray); }
+.invoice-meta { text-align: right; }
+.invoice-number { font-family: var(--font-display); font-size: 1.2rem; color: var(--cream); }
+.invoice-date { font-size: 0.75rem; color: var(--warm-gray); margin-top: 0.3rem; }
+
+.invoice-addresses {
+  display: grid; grid-template-columns: 1fr 1fr;
+  padding: 1.5rem 2.5rem; gap: 2rem;
+  border-bottom: 1px solid rgba(201,168,76,0.1);
+}
+.addr-block h4 { font-size: 0.6rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.75rem; }
+.addr-block p { font-size: 0.82rem; color: var(--cream); line-height: 1.7; }
+.addr-block .small { font-size: 0.75rem; color: var(--warm-gray); }
+
+.invoice-items { padding: 1.5rem 2.5rem; }
+.items-head {
+  display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+  font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--warm-gray); padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(201,168,76,0.1);
+}
+.invoice-item {
+  display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+  padding: 0.75rem 0; font-size: 0.85rem;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+.item-name { color: var(--cream); }
+.item-cell { color: var(--warm-gray); }
+.item-total { color: var(--gold); font-family: var(--font-display); }
+
+.invoice-totals {
+  padding: 1.5rem 2.5rem;
+  background: rgba(201,168,76,0.03);
+  border-top: 1px solid rgba(201,168,76,0.1);
+}
+.total-row { display: flex; justify-content: space-between; padding: 0.35rem 0; font-size: 0.83rem; color: var(--warm-gray); }
+.total-row.grand { color: var(--gold); font-family: var(--font-display); font-size: 1.2rem; border-top: 1px solid rgba(201,168,76,0.2); padding-top: 0.75rem; margin-top: 0.35rem; }
+
+.invoice-footer {
+  padding: 1.5rem 2.5rem; text-align: center;
+  border-top: 1px solid rgba(201,168,76,0.1);
+}
+.invoice-footer p { font-size: 0.75rem; color: var(--warm-gray); margin-bottom: 0.3rem; }
+.invoice-footer .tagline { font-family: var(--font-display); font-size: 1rem; color: var(--gold); font-style: italic; }
+
+/* Status badge */
+.status-badge {
+  display: inline-block; background: rgba(76,175,80,0.2);
+  border: 1px solid rgba(76,175,80,0.5); color: #4caf50;
+  padding: 0.25rem 0.75rem; font-size: 0.65rem; letter-spacing: 0.15em;
+  text-transform: uppercase; margin-top: 0.3rem;
+}
+
+/* Buttons */
+.action-buttons { display: flex; gap: 1rem; margin: 2rem 0; flex-wrap: wrap; }
+.btn-gold {
+  background: var(--gold); color: var(--noir);
+  border: none; padding: 0.9rem 2rem;
+  font-family: var(--font-body); font-size: 0.75rem;
+  letter-spacing: 0.15em; text-transform: uppercase;
+  cursor: pointer; transition: all 0.3s; flex: 1;
+}
+.btn-gold:hover { background: var(--gold-dark); }
+.btn-outline {
+  background: transparent; color: var(--gold);
+  border: 1px solid var(--gold); padding: 0.9rem 2rem;
+  font-family: var(--font-body); font-size: 0.75rem;
+  letter-spacing: 0.15em; text-transform: uppercase;
+  cursor: pointer; transition: all 0.3s; flex: 1;
+}
+.btn-outline:hover { background: var(--gold); color: var(--noir); }
+
+/* Print */
+@media print {
+  body { background: white; color: black; }
+  .success-banner, .delivery-card, .action-buttons { display: none; }
+  .invoice-box { border: 1px solid #ddd; }
+  .invoice-brand .brand-name, .delivery-time, .item-total, .grand { color: #8B6914; }
+  .invoice-meta, .addr-block p, .item-name { color: black; }
+  .addr-block .small, .item-cell, .total-row, .invoice-footer p { color: #555; }
+}
+</style>
+</head>
+<body>
+
+<div class="success-banner">
+  <span class="success-icon">🎉</span>
+  <h1 class="success-title">Order Confirmed!</h1>
+  <p class="success-subtitle">Your artisan delicacies are being prepared with love</p>
+</div>
+
+<div class="page-wrap">
+  <div class="delivery-card">
+    <div class="delivery-label">Estimated Delivery Time</div>
+    <div class="delivery-time" id="delivery-time">—</div>
+    <div class="delivery-note">⏱ Your order will arrive within 1–4 hours from order placement</div>
+  </div>
+
+  <div class="invoice-box" id="invoice-box">
+    <div class="invoice-header">
+      <div class="invoice-brand">
+        <div class="brand-name">La Maison Dorée</div>
+        <div class="brand-sub">Artisan Bakery · Mumbai</div>
+      </div>
+      <div class="invoice-meta">
+        <div class="invoice-number" id="inv-number">INVOICE</div>
+        <div class="invoice-date" id="inv-date"></div>
+        <div class="status-badge">✓ CONFIRMED</div>
+      </div>
+    </div>
+
+    <div class="invoice-addresses">
+      <div class="addr-block">
+        <h4>From</h4>
+        <p>La Maison Dorée<br>14, Hill Road, Bandra West<br>Mumbai - 400050<br>Maharashtra, India</p>
+        <p class="small">GSTIN: 27ABCDE1234F1Z5<br>hello@lamaisondoree.in | +91 98765 43210</p>
+      </div>
+      <div class="addr-block">
+        <h4>Deliver To</h4>
+        <p id="delivery-address">—</p>
+      </div>
+    </div>
+
+    <div class="invoice-items">
+      <div class="items-head">
+        <span>Item</span>
+        <span>Rate</span>
+        <span>Qty</span>
+        <span>Amount</span>
+      </div>
+      <div id="invoice-items-list"></div>
+    </div>
+
+    <div class="invoice-totals">
+      <div class="total-row"><span>Subtotal</span><span id="inv-subtotal"></span></div>
+      <div class="total-row"><span>GST (5%)</span><span id="inv-tax"></span></div>
+      <div class="total-row"><span>Delivery Charge</span><span>₹40</span></div>
+      <div class="total-row grand"><span>Total Paid</span><span id="inv-total"></span></div>
+    </div>
+
+    <div class="invoice-footer">
+      <p>Payment Method: <strong id="inv-payment"></strong></p>
+      <p>Order ID: <strong id="inv-order-id"></strong></p>
+      <p style="margin-top:1rem" class="tagline">"Baked with passion, delivered with love."</p>
+      <p style="margin-top:0.5rem">Thank you for choosing La Maison Dorée!</p>
+    </div>
+  </div>
+
+  <div class="action-buttons">
+    <button class="btn-gold" onclick="downloadInvoice()">⬇ Download Invoice</button>
+    <button class="btn-outline" onclick="window.location.href='index.html'">← Continue Shopping</button>
+  </div>
+</div>
+
+<script>
+window.addEventListener('load', () => {
+  const order = JSON.parse(localStorage.getItem('lmd_last_order') || 'null');
+  if (!order) { window.location.href = 'index.html'; return; }
+
+  document.getElementById('delivery-time').textContent = order.estimatedDelivery;
+  document.getElementById('inv-number').textContent = order.id;
+  document.getElementById('inv-date').textContent = new Date(order.placedAt).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' });
+  document.getElementById('inv-order-id').textContent = order.id;
+  document.getElementById('inv-payment').textContent = { upi: 'UPI', card: 'Credit/Debit Card', cod: 'Cash on Delivery' }[order.paymentMethod] || order.paymentMethod;
+
+  const addr = order.address;
+  document.getElementById('delivery-address').innerHTML = `
+    ${order.userName}<br>${order.userPhone}<br>
+    ${addr.line1}${addr.line2 ? ', '+addr.line2 : ''}<br>
+    ${addr.city}, ${addr.state} - ${addr.pin}`;
+
+  document.getElementById('invoice-items-list').innerHTML = order.items.map(i => `
+    <div class="invoice-item">
+      <span class="item-name">${i.emoji} ${i.name}</span>
+      <span class="item-cell">₹${i.price}</span>
+      <span class="item-cell">${i.qty}</span>
+      <span class="item-total">₹${i.price * i.qty}</span>
+    </div>`).join('');
+
+  document.getElementById('inv-subtotal').textContent = `₹${order.subtotal}`;
+  document.getElementById('inv-tax').textContent = `₹${order.tax}`;
+  document.getElementById('inv-total').textContent = `₹${order.total}`;
+});
+
+function downloadInvoice() {
+  const order = JSON.parse(localStorage.getItem('lmd_last_order') || '{}');
+  const printContent = document.getElementById('invoice-box').innerHTML;
+  const win = window.open('', '_blank');
+  win.document.write(`
+    <html><head><title>Invoice ${order.id}</title>
+    <style>
+      body { font-family: 'Montserrat', sans-serif; color: #333; max-width: 800px; margin: 0 auto; padding: 2rem; }
+      .invoice-header { display: flex; justify-content: space-between; padding: 1.5rem 0; border-bottom: 2px solid #C9A84C; }
+      .brand-name { font-size: 1.8rem; color: #C9A84C; font-family: Georgia, serif; }
+      .brand-sub, .invoice-date { color: #666; font-size: 0.75rem; }
+      .invoice-number { font-size: 1.2rem; }
+      .status-badge { background: #e8f5e9; color: #388e3c; padding: 0.2rem 0.5rem; font-size: 0.7rem; }
+      .invoice-addresses { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; padding: 1rem 0; }
+      .addr-block h4 { color: #C9A84C; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 0.5rem; }
+      .addr-block p { font-size: 0.82rem; line-height: 1.7; }
+      .items-head { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; background: #f5f5f5; padding: 0.5rem; font-size: 0.7rem; text-transform: uppercase; color: #666; }
+      .invoice-item { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; padding: 0.6rem 0; border-bottom: 1px solid #eee; font-size: 0.85rem; }
+      .item-total { color: #C9A84C; }
+      .invoice-totals { padding: 1rem 0; border-top: 1px solid #ddd; }
+      .total-row { display: flex; justify-content: space-between; padding: 0.3rem 0; font-size: 0.83rem; color: #555; }
+      .grand { color: #C9A84C; font-size: 1.1rem; font-weight: bold; border-top: 2px solid #C9A84C; padding-top: 0.5rem; margin-top: 0.3rem; }
+      .invoice-footer { text-align: center; padding: 1rem 0; border-top: 1px solid #eee; color: #666; font-size: 0.75rem; }
+      .tagline { font-style: italic; color: #C9A84C; font-size: 1rem; }
+    </style></head>
+    <body>${printContent}</body></html>`);
+  win.document.close();
+  win.focus();
+  setTimeout(() => { win.print(); win.close(); }, 500);
+}
+</script>
+</body>
+</html>

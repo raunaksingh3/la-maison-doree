@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — La Maison Dorée</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600&family=Montserrat:wght@200;300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+
+<!-- Admin Login Screen -->
+<div id="admin-login-screen">
+  <div class="login-screen">
+    <div class="login-box">
+      <div class="login-brand">La Maison Dorée</div>
+      <div class="login-sub">Administrator Panel</div>
+      <div class="form-group">
+        <label>Username</label>
+        <input type="text" id="admin-username" placeholder="admin" class="form-input">
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="admin-password" placeholder="password" class="form-input">
+      </div>
+      <div id="admin-login-error" class="form-error"></div>
+      <button class="btn-gold full" onclick="adminLogin()">Login to Admin</button>
+      <p style="text-align:center;margin-top:1rem;font-size:0.75rem;color:var(--warm-gray)">
+        <a href="index.html" style="color:var(--gold);text-decoration:none">← Back to Store</a>
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- Admin Dashboard -->
+<div id="admin-app" class="hidden">
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-icon">🥐</div>
+      <div>
+        <div class="sidebar-logo">La Maison</div>
+        <div class="sidebar-sub">Admin Panel</div>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="#" class="nav-item active" data-section="dashboard" onclick="showSection('dashboard')">
+        <span class="nav-icon">📊</span><span>Dashboard</span>
+      </a>
+      <a href="#" class="nav-item" data-section="orders" onclick="showSection('orders')">
+        <span class="nav-icon">📦</span><span>Orders</span>
+        <span class="nav-badge" id="new-orders-badge">0</span>
+      </a>
+      <a href="#" class="nav-item" data-section="customers" onclick="showSection('customers')">
+        <span class="nav-icon">👥</span><span>Customers</span>
+      </a>
+      <a href="#" class="nav-item" data-section="products" onclick="showSection('products')">
+        <span class="nav-icon">🍰</span><span>Products</span>
+      </a>
+      <a href="#" class="nav-item" data-section="expenses" onclick="showSection('expenses')">
+        <span class="nav-icon">💸</span><span>Expenses</span>
+      </a>
+      <a href="#" class="nav-item" data-section="sales" onclick="showSection('sales')">
+        <span class="nav-icon">📈</span><span>Sales</span>
+      </a>
+      <a href="#" class="nav-item" data-section="analytics" onclick="showSection('analytics')">
+        <span class="nav-icon">🔍</span><span>Analytics</span>
+      </a>
+      <a href="#" class="nav-item" data-section="reports" onclick="showSection('reports')">
+        <span class="nav-icon">📋</span><span>Reports</span>
+      </a>
+      <a href="#" class="nav-item" data-section="backup" onclick="showSection('backup')">
+        <span class="nav-icon">💾</span><span>Backup</span>
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="logout-btn" onclick="adminLogout()">Logout</button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <header class="admin-header">
+      <div class="header-left">
+        <h1 class="page-title" id="page-title">Dashboard</h1>
+        <p class="page-date" id="page-date"></p>
+      </div>
+      <div class="header-right">
+        <div class="admin-avatar">A</div>
+        <span class="admin-name">Administrator</span>
+      </div>
+    </header>
+
+    <!-- DASHBOARD -->
+    <section id="section-dashboard" class="section active">
+      <div class="kpi-grid" id="kpi-grid"></div>
+      <div class="charts-row">
+        <div class="chart-card wide">
+          <div class="chart-card-header">
+            <h3>Revenue (Last 90 Days)</h3>
+          </div>
+          <canvas id="revenueChart" height="80"></canvas>
+        </div>
+        <div class="chart-card">
+          <div class="chart-card-header"><h3>Orders by Category</h3></div>
+          <canvas id="categoryChart" height="200"></canvas>
+        </div>
+      </div>
+      <div class="charts-row">
+        <div class="chart-card">
+          <div class="chart-card-header"><h3>Top Selling Products</h3></div>
+          <div id="top-products-list"></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-card-header"><h3>Recent Orders</h3></div>
+          <div id="recent-orders-mini"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ORDERS -->
+    <section id="section-orders" class="section">
+      <div class="section-toolbar">
+        <input type="text" id="order-search" placeholder="Search orders..." class="search-input" oninput="renderOrders()">
+        <select id="order-status-filter" class="filter-select" onchange="renderOrders()">
+          <option value="all">All Status</option>
+          <option value="Confirmed">Confirmed</option>
+          <option value="Preparing">Preparing</option>
+          <option value="Out for Delivery">Out for Delivery</option>
+          <option value="Delivered">Delivered</option>
+          <option value="Cancelled">Cancelled</option>
+        </select>
+      </div>
+      <div class="data-table-wrap">
+        <table class="data-table" id="orders-table">
+          <thead><tr>
+            <th>Order ID</th><th>Customer</th><th>Items</th><th>Total</th><th>Payment</th><th>Date</th><th>Status</th><th>Actions</th>
+          </tr></thead>
+          <tbody id="orders-tbody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- CUSTOMERS -->
+    <section id="section-customers" class="section">
+      <div class="section-toolbar">
+        <input type="text" id="cust-search" placeholder="Search customers..." class="search-input" oninput="renderCustomers()">
+      </div>
+      <div class="data-table-wrap">
+        <table class="data-table">
+          <thead><tr>
+            <th>Name</th><th>Email</th><th>Phone</th><th>City</th><th>Orders</th><th>Total Spent</th><th>Joined</th>
+          </tr></thead>
+          <tbody id="customers-tbody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- PRODUCTS -->
+    <section id="section-products" class="section">
+      <div class="section-toolbar">
+        <input type="text" id="prod-search" placeholder="Search products..." class="search-input" oninput="renderAdminProducts()">
+        <button class="btn-gold" onclick="openAddProduct()">+ Add Product</button>
+      </div>
+      <div class="data-table-wrap">
+        <table class="data-table">
+          <thead><tr>
+            <th>Icon</th><th>Name</th><th>Category</th><th>Price (₹)</th><th>Sold</th><th>Revenue</th><th>Actions</th>
+          </tr></thead>
+          <tbody id="products-tbody"></tbody>
+        </table>
+      </div>
+      <!-- Add Product Modal -->
+      <div class="modal-overlay" id="add-product-overlay">
+        <div class="modal-box">
+          <button class="modal-close" onclick="closeAddProduct()">×</button>
+          <h3 id="product-modal-title">Add New Product</h3>
+          <input type="hidden" id="edit-product-id">
+          <div class="form-row">
+            <div class="form-group"><label>Product Name</label><input type="text" id="np-name" class="form-input" placeholder="Name"></div>
+            <div class="form-group"><label>Category</label>
+              <select id="np-cat" class="form-input">
+                <option value="croissants">Croissants</option>
+                <option value="breads">Breads</option>
+                <option value="cakes">Cakes</option>
+                <option value="pastries">Pastries</option>
+                <option value="cookies">Cookies</option>
+                <option value="macarons">Macarons</option>
+                <option value="tarts">Tarts</option>
+                <option value="muffins">Muffins</option>
+                <option value="beverages">Beverages</option>
+                <option value="savory">Savory</option>
+                <option value="seasonal">Seasonal</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label>Price (₹)</label><input type="number" id="np-price" class="form-input" placeholder="0"></div>
+            <div class="form-group"><label>Emoji</label><input type="text" id="np-emoji" class="form-input" placeholder="🥐"></div>
+          </div>
+          <div class="form-group"><label>Description</label><textarea id="np-desc" class="form-input" rows="3" placeholder="Product description..."></textarea></div>
+          <button class="btn-gold full" onclick="saveProduct()">Save Product</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- EXPENSES -->
+    <section id="section-expenses" class="section">
+      <div class="section-toolbar">
+        <button class="btn-gold" onclick="openAddExpense()">+ Add Expense</button>
+        <span class="total-label">Monthly Total: <strong id="expense-monthly-total">₹0</strong></span>
+      </div>
+      <div class="data-table-wrap">
+        <table class="data-table">
+          <thead><tr><th>Date</th><th>Category</th><th>Description</th><th>Amount</th><th>Actions</th></tr></thead>
+          <tbody id="expenses-tbody"></tbody>
+        </table>
+      </div>
+      <div class="chart-card" style="margin-top:2rem">
+        <div class="chart-card-header"><h3>Expense Breakdown</h3></div>
+        <canvas id="expenseChart" height="200"></canvas>
+      </div>
+      <!-- Add Expense Modal -->
+      <div class="modal-overlay" id="add-expense-overlay">
+        <div class="modal-box">
+          <button class="modal-close" onclick="closeAddExpense()">×</button>
+          <h3>Add Expense</h3>
+          <input type="hidden" id="edit-expense-id">
+          <div class="form-group"><label>Date</label><input type="date" id="exp-date" class="form-input"></div>
+          <div class="form-group"><label>Category</label>
+            <select id="exp-cat" class="form-input">
+              <option>Ingredients</option><option>Utilities</option><option>Staff Salary</option>
+              <option>Equipment</option><option>Marketing</option><option>Packaging</option><option>Rent</option><option>Others</option>
+            </select>
+          </div>
+          <div class="form-group"><label>Description</label><input type="text" id="exp-desc" class="form-input" placeholder="Details..."></div>
+          <div class="form-group"><label>Amount (₹)</label><input type="number" id="exp-amount" class="form-input" placeholder="0"></div>
+          <button class="btn-gold full" onclick="saveExpense()">Save Expense</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SALES -->
+    <section id="section-sales" class="section">
+      <div class="kpi-grid" id="sales-kpi-grid"></div>
+      <div class="charts-row">
+        <div class="chart-card wide">
+          <div class="chart-card-header">
+            <h3>Monthly Sales vs Expenses</h3>
+            <select id="sales-year-filter" class="filter-select" onchange="renderSalesCharts()">
+              <option value="2024">2024</option>
+            </select>
+          </div>
+          <canvas id="salesExpenseChart" height="80"></canvas>
+        </div>
+        <div class="chart-card">
+          <div class="chart-card-header"><h3>Profit/Loss by Month</h3></div>
+          <canvas id="profitChart" height="200"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- ANALYTICS -->
+    <section id="section-analytics" class="section">
+      <div class="analytics-grid">
+        <div class="chart-card">
+          <div class="chart-card-header"><h3>🏆 Top Selling Products (This Month)</h3></div>
+          <div id="analytics-top-products"></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-card-header"><h3>💰 Most Profitable Products</h3></div>
+          <div id="analytics-profitable"></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-card-header"><h3>📊 Sales by Category</h3></div>
+          <canvas id="analyticsCategChart" height="250"></canvas>
+        </div>
+        <div class="chart-card">
+          <div class="chart-card-header"><h3>👥 Customer Segments</h3></div>
+          <canvas id="customerSegChart" height="250"></canvas>
+        </div>
+        <div class="chart-card wide">
+          <div class="chart-card-header"><h3>📅 Daily Orders Heatmap (Last 90 Days)</h3></div>
+          <div id="heatmap-container"></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-card-header"><h3>⏰ Peak Hours</h3></div>
+          <canvas id="peakHoursChart" height="250"></canvas>
+        </div>
+        <div class="chart-card">
+          <div class="chart-card-header"><h3>💳 Payment Methods</h3></div>
+          <canvas id="paymentChart" height="250"></canvas>
+        </div>
+        <div class="chart-card">
+          <div class="chart-card-header"><h3>📈 Average Order Value Trend</h3></div>
+          <canvas id="aovChart" height="250"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- REPORTS -->
+    <section id="section-reports" class="section">
+      <div class="reports-grid">
+        <div class="report-card">
+          <div class="report-icon">📊</div>
+          <h3>Sales Report</h3>
+          <p>Comprehensive sales data with product breakdown</p>
+          <div class="report-period">
+            <select id="report-period" class="filter-select">
+              <option value="today">Today</option>
+              <option value="week">This Week</option>
+              <option value="month" selected>This Month</option>
+              <option value="quarter">This Quarter</option>
+              <option value="3months">Last 3 Months</option>
+            </select>
+          </div>
+          <button class="btn-gold" onclick="generateReport('sales')">Generate & Download</button>
+        </div>
+        <div class="report-card">
+          <div class="report-icon">💸</div>
+          <h3>Expense Report</h3>
+          <p>Itemized expense breakdown with categories</p>
+          <button class="btn-gold" onclick="generateReport('expenses')">Generate & Download</button>
+        </div>
+        <div class="report-card">
+          <div class="report-icon">📦</div>
+          <h3>Orders Report</h3>
+          <p>Complete order history with status tracking</p>
+          <button class="btn-gold" onclick="generateReport('orders')">Generate & Download</button>
+        </div>
+        <div class="report-card">
+          <div class="report-icon">👥</div>
+          <h3>Customer Report</h3>
+          <p>Customer data, retention, and spending patterns</p>
+          <button class="btn-gold" onclick="generateReport('customers')">Generate & Download</button>
+        </div>
+        <div class="report-card">
+          <div class="report-icon">📈</div>
+          <h3>P&L Statement</h3>
+          <p>Profit and loss statement with margins</p>
+          <button class="btn-gold" onclick="generateReport('pnl')">Generate & Download</button>
+        </div>
+        <div class="report-card">
+          <div class="report-icon">🏆</div>
+          <h3>Product Performance</h3>
+          <p>Top performers, slow movers, and profitability</p>
+          <button class="btn-gold" onclick="generateReport('products')">Generate & Download</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- BACKUP -->
+    <section id="section-backup" class="section">
+      <div class="backup-grid">
+        <div class="backup-card">
+          <div class="backup-icon">💾</div>
+          <h3>Local Backup</h3>
+          <p>Save all data to browser localStorage as backup snapshot</p>
+          <button class="btn-gold" onclick="createLocalBackup()">Create Backup Now</button>
+          <div id="backup-status" class="backup-status"></div>
+        </div>
+        <div class="backup-card">
+          <div class="backup-icon">📥</div>
+          <h3>Export All Data</h3>
+          <p>Download complete data as Excel-compatible CSV files</p>
+          <button class="btn-gold" onclick="exportAllData()">Export to Excel (CSV)</button>
+        </div>
+        <div class="backup-card">
+          <div class="backup-icon">📤</div>
+          <h3>Restore Backup</h3>
+          <p>Import data from a previously exported backup file</p>
+          <input type="file" id="restore-file" accept=".json" onchange="restoreBackup(this)" style="display:none">
+          <button class="btn-gold" onclick="document.getElementById('restore-file').click()">Import Backup (JSON)</button>
+        </div>
+        <div class="backup-card">
+          <div class="backup-icon">🔄</div>
+          <h3>Restore Sample Data</h3>
+          <p>Re-inject 3 months of demo orders, expenses and customers</p>
+          <button class="btn-gold" onclick="restoreSampleData()">Restore Sample Data</button>
+        </div>
+        <div class="backup-card">
+          <div class="backup-icon">🗑️</div>
+          <h3>Clear Test Data</h3>
+          <p>Remove sample data and keep only real data</p>
+          <button class="btn-outline" onclick="clearSampleData()">Clear Sample Data</button>
+        </div>
+      </div>
+      <div class="chart-card" style="margin-top:2rem">
+        <div class="chart-card-header"><h3>Backup History</h3></div>
+        <div id="backup-history"></div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- Order Detail Modal -->
+<div class="modal-overlay" id="order-detail-overlay">
+  <div class="modal-box wide-modal">
+    <button class="modal-close" onclick="closeOrderDetail()">×</button>
+    <h3>Order Details</h3>
+    <div id="order-detail-content"></div>
+    <div class="order-status-update">
+      <label>Update Status:</label>
+      <select id="order-status-select" class="filter-select">
+        <option>Confirmed</option>
+        <option>Preparing</option>
+        <option>Out for Delivery</option>
+        <option>Delivered</option>
+        <option>Cancelled</option>
+      </select>
+      <button class="btn-gold" onclick="updateOrderStatus()">Update</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="admin-toast"></div>
+
+<script src="js/products-data.js"></script>
+<script src="js/admin-data.js"></script>
+<script src="js/admin.js"></script>
+<script src="js/admin2.js"></script>
+</body>
+</html>
